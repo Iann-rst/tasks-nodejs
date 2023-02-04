@@ -9,10 +9,12 @@ export const routes = [
     path: '/tasks',
 
     handler: (req, res)=>{
+      const {title, description} = req.body;
+
       const task = {
         id: randomUUID(),
-        title: 'Task 1',
-        description: 'Descrição detalhada da task',
+        title,
+        description,
         completed_at: null,
         created_at: new Date(),
         updated_at: new Date(),
