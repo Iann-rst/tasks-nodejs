@@ -31,7 +31,37 @@ export class Database{
     return data;
   }
 
-  select(table){
-    return this.#database[table] ?? [];
+  select(table, search){
+    let data = this.#database[table] ?? [];
+
+
+    if(search){
+      data = data.filter(row => {
+        return Object.entries(search).some(([key, value])=> {
+          return row[key].includes(value)
+        })
+      })
+    }
+
+    return data;
+  }
+
+  update(table, data, id){
+    const taskIndex = this.#database[table].findIndex(row => row.id === id);
+
+    if(taskIndex > -1){
+      const task = this.#database[table][taskIndex]
+      this.#database[table][taskIndex] = {id, ...task, ...data}
+      this.#persist()
+    }
+  }
+
+  delete(table, id){
+    const taskIndex = this.#database[table].findIndex(task => task.id === id)
+
+    if(taskIndex > -1){
+      this.#database[table].splice(taskIndex, 1);
+      this.#persist();
+    }
   }
 }
